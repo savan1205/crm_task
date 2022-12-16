@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_crm" model="ir.ui.view">
+        <field name="name">crm.lead</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="attributes">
+                <attribute name="attrs">{'readonly':[('stage_id', '=',13)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="info_1"/>
+                <field name="info_2"/>
+                <field name="info_3"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
