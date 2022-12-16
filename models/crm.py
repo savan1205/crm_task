@@ -11,21 +11,35 @@ class Lead(models.Model):
     info_3 = fields.Float(string = "Info 3:")
 
     def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
-
+        res = super(Lead,self)._handle_partner_assignment(self, force_partner_id, create_missing)
         for lead in self:
             if force_partner_id:
-                lead.partner_id = force_partner_id
-                print(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",force_partner_id)
-                get_partner_id = self.env['res.partner'].search([('id','=',force_partner_id)])
-                get_partner_id.write({
-                    'info_1':self.info_1,
-                    'info_2':self.info_2,
-                    'info_3':self.info_3,
+                get_partner_rec = self.env['res.partner'].browse(force_partner_id)
+                get_partner_rec.write({
+                    'info_1':lead.info_1,
+                    'info_2':lead.info_2,
+                    'info_3':lead.info_3,
                 })
-            if not lead.partner_id and create_missing:
-                print("...............................",lead)
-                partner = lead._create_customer()
-                lead.partner_id = partner.id
+        return res
+
+                                        # OR
+
+    # def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+    #
+    #     for lead in self:
+    #         if force_partner_id:
+    #             lead.partner_id = force_partner_id
+    #             print(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,", force_partner_id)
+    #             get_partner_id = self.env['res.partner'].search([('id', '=', force_partner_id)])
+    #             get_partner_id.write({
+    #                 'info_1': self.info_1,
+    #                 'info_2': self.info_2,
+    #                 'info_3': self.info_3,
+    #             })
+    #         if not lead.partner_id and create_missing:
+    #             print("...............................", lead)
+    #             partner = lead._create_customer()
+    #             lead.partner_id = partner.id
 
     def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
         partner_data = super(Lead, self)._prepare_customer_values(partner_name, is_company=False, parent_id=False)
